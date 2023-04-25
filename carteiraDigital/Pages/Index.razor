@@ -1,9 +1,87 @@
 ﻿@page "/"
+@inject DadosCarteira dados
+@* LISTA DE CARTEIRAS NÃO FUNCIONANDO *@
+<PageTitle>Carteira</PageTitle>
 
-<PageTitle>Index</PageTitle>
+<div class="container">
+    <h1>Bem vindo!</h1>
+    <h2>Cadastre uma carteira digital:</h2>
+    <div class="form">
+        <div class="nome">
+            <label>Nome do proprietário</label>
+            <input type="text" @bind=nomeDono>
+        </div>
+        <div class="cpf">
+            <label>CPF do proprietário</label>
+            <input type="text" @bind=cpfDono>
+        </div>
+        <div class="deposito-inicial">
+            <label>Depósito inicial</label>
+            <input type="number" @bind=depositoValor>
+        </div>
+    
+        <button id="btn-cadastro" class="btn btn-primary" @onclick="CriarConta">Cadastrar</button>
+        <p>@response</p>
+    </div>
 
-<h1>Hello, world!</h1>
+</div>
 
-Welcome to your new app.
+@code {
+    private string nomeDono;
+    private string cpfDono;
+    private double depositoValor;
+    private int numeroConta;
+    private string response = "";
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    private void CriarConta()
+    {
+
+        Carteira novaConta = new Carteira();
+
+        numeroConta = dados.ListaDados.Count+1;
+
+        novaConta.Dono = nomeDono;
+        novaConta.CPF = cpfDono;
+        novaConta.Numero = numeroConta;
+        novaConta.Limite = depositoValor * 0.1;
+
+        if(depositoValor > 0 && novaConta.CPF.Length == 11)
+        {
+            bool depositoInicial = novaConta.Depositar(depositoValor); 
+
+            if (depositoInicial)
+            {
+                dados.ListaDados.Add(novaConta);
+                Console.WriteLine(dados.ListaDados[numeroConta - 1].Dono);
+                Console.WriteLine(dados.ListaDados[numeroConta - 1].Numero);
+                Console.WriteLine(dados.ListaDados[numeroConta - 1].Saldo);
+                Console.WriteLine(dados.ListaDados[numeroConta - 1].Limite);
+                response = $"Conta criada com sucesso (Numero: {numeroConta}; Nome: {nomeDono}; Saldo: {depositoValor})";
+
+                nomeDono = "";
+                depositoValor = 0;
+            }
+        } 
+        else
+        {
+            response = $"Falha ao criar conta digital. Valor do depósito deve ser maior que R$0,00!";    
+        }
+
+    }
+}
+
+<style>
+    #btn-cadastro {
+        margin-top: 2rem;
+    }
+    input, label{
+        display: inline-block;
+    }
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0; 
+    }
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
+</style>

@@ -1,0 +1,38 @@
+﻿@page "/painel"
+
+<div class="container">
+    <h1>Bem vindo, MATHEUS</h1>
+    <div class="painel">
+        <div class="row">
+            <div class="col-4">
+                <a href="/transferir"><img class="icon" src="img/transaction.png" /></a>
+                <p>Transferir</p>
+            </div>
+            <div class="col-4">
+                <a href="/depositar"><img class="icon" src="img/deposit.png" /></a>
+                <p>Depositar</p>
+            </div>
+            <div class="col-4">
+                <a href="/saldo"><img class="icon" src="img/wallet.png" /></a>
+                <p>Saldo</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}
+
+<style>
+    .icon {
+        width: 100%;
+        background: #f1f1f1;
+        border: solid #e7e7e7;
+        border-radius: 20px;
+        padding: 8px;
+    }
+    p {
+        text-align: center;
+    }
+</style>
