@@ -1,0 +1,60 @@
+﻿@inject DadosCarteira dados
+
+<div id="tabDeposit">
+
+    <div class="form-cotrol">
+        <label>Valor</label>
+        <input type="number" @bind=valorDeposito>
+    </div>
+
+    <button @onclick=Depositar>Depositar</button>
+
+    @if (deposito == true)
+    {
+        <div>
+            <strong><p style="color: green">Deposito realizado com sucesso!</p></strong>
+            <p>Valor: @valorDeposito.ToString("C")</p>
+            <p>Data: @dados.DataSistema.ToLongTimeString()</p>
+        </div>
+    } else
+    {
+        <p class="msg-erro">@response</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Carteira Conta { get; set; }
+    bool? deposito = null;
+    double valorDeposito;
+    string response = "";
+
+    public void Depositar()
+    {
+
+        if(valorDeposito > 0)
+        {
+
+            bool depositoCarteira = Conta.Depositar(valorDeposito);
+            deposito = true;
+
+        }
+        else
+        {
+            response = "Valor do depósito deve ser maior do que R$0,00";
+            deposito = false;
+        }
+
+    }
+}
+
+<style>
+    input, label {
+        display: block;
+        margin-top: 1rem;
+    }
+
+    button {
+        margin-top: 2rem;
+    }
+</style>

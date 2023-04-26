@@ -35,8 +35,6 @@
     {
         Carteira Destino = dados.ListaDados.FirstOrDefault(c => c.Numero.ToString() == numeroConta.ToString());
 
-
-
         if(Destino is not null)
         {
             Conta.Transferir(Destino, valorTransferencia);
