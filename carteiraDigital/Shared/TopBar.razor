@@ -1,0 +1,33 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <h1>@tituloInput</h1>
+</div>
+
+@code {
+
+    @*Definindo parâmetros para o componente*@
+    [Parameter]
+    public string titulo { get; set; }
+
+    private string tituloInput;
+
+    protected override void OnInitialized()
+    {
+        tituloInput = titulo;
+    }
+
+}
+
+<style>
+    .top-row {
+        padding-top: 1rem;
+        height: 4.5rem;
+        background-color: #30363d;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+    }
+    .top-row > h1 {
+        color: white;
+    }
+</style>

@@ -1,37 +1,111 @@
-﻿@page "/painel"
+﻿@page "/painel/{conta}"
+@inject DadosCarteira dados;
+@inject NavigationManager nav
+
+<TopBar titulo="Painel" />
 
 <div class="container">
-    <h1>Bem vindo, MATHEUS</h1>
-    <div class="painel">
-        <div class="row">
-            <div class="col-4">
-                <a href="/transferir"><img class="icon" src="img/transaction.png" /></a>
-                <p>Transferir</p>
+
+@if(carteira is not null)
+{
+    
+        <h1>Bem vindo, @carteira.Dono !</h1>
+        <div class="painel">
+            <div class="row">
+                <div class="col-6">
+                    <a @onclick="() => escolhaOperacao(1)"><img class="icon" src="img/transaction.png" data-bs-toggle="modal" data-bs-target="#modalTransf"/></a>
+                    <p>Transferir</p>
+                </div>
+                <div class="col-6">
+                    <a @onclick="() => escolhaOperacao(2)"><img class="icon" src="img/deposit.png" /></a>
+                    <p>Depositar</p>
+                </div>
             </div>
-            <div class="col-4">
-                <a href="/depositar"><img class="icon" src="img/deposit.png" /></a>
-                <p>Depositar</p>
-            </div>
-            <div class="col-4">
-                <a href="/saldo"><img class="icon" src="img/wallet.png" /></a>
-                <p>Saldo</p>
+
+            <div class="row">
+                <div class="col-6">
+                    <a href="/saldo"><img class="icon" src="img/wallet.png" /></a>
+                    <p>Saldo</p>
+                </div>
+                <div class="col-6">
+                    <a href="/dados"><img class="icon" src="img/user.png" /></a>
+                    <p>Dados</p>
+                </div>
             </div>
         </div>
-    </div>
+
+        switch (@operacao)
+        {
+            case 1:
+                <Transferencia Conta=@carteira/>
+            break;
+        }
+
+
+    
+} 
+else
+{
+    <strong><p style="color: red">ERRO! Conta não encontrada!</p></strong>
+}
+
 </div>
 
 @code {
+    [Parameter]
+    public string? conta { get; set; }
+    private int operacao = 0;
+    private Carteira? carteira = null;
 
+
+    //Ao Incializar a Pagina(Tela- Interface Grafica)
+    protected override void OnInitialized()
+    {
+        carteira = this.dados.ListaDados.FirstOrDefault(c => c.Numero.ToString() == conta);
+    }
+
+    public void escolhaOperacao(int op)
+    {
+        this.operacao = op;
+    }
 }
 
 <style>
+    .container{
+        padding-top: 5rem!important;
+    }
     .icon {
         width: 100%;
         background: #f1f1f1;
         border: solid #e7e7e7;
         border-radius: 20px;
         padding: 8px;
+        transition-duration: 0.4s;
+        text-decoration: none;
+        overflow: hidden;
+        cursor: pointer;
     }
+
+    .icon:after {
+        content: "";
+        background: #90EE90;
+        display: block;
+        position: absolute;
+        padding-top: 300%;
+        padding-left: 350%;
+        margin-left: -20px !important;
+        margin-top: -120%;
+        opacity: 0;
+        transition: all 0.8s
+    }
+
+    .icon:active:after {
+        padding: 0;
+        margin: 0;
+        opacity: 1;
+        transition: 0s
+    }
+
     p {
         text-align: center;
     }

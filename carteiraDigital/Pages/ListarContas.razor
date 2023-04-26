@@ -1,0 +1,50 @@
+﻿@page "/contas"
+@inject DadosCarteira dadosCarteira
+@inject NavigationManager nav
+
+<TopBar titulo="Contas cadastradas" />
+
+<div class="container">
+    @if(dadosCarteira.ListaDados.Count > 0)
+    {
+        foreach(var conta in dadosCarteira.ListaDados)
+        {
+            <div class="conta">
+                <h4><strong>Nº Conta:</strong> @conta.Numero | <strong>Nome:</strong> @conta.Dono | <strong>Saldo:</strong> @conta.Saldo.ToString("C")</h4>
+                <button class="btn-primary" @onclick="() => AcessarConta(conta.Numero)">Acessar conta</button>
+            </div>
+        }
+    } 
+    else
+    {
+        <p style="color: red;">Nenhuma conta cadastrada.</p>
+    }
+</div>
+
+@code{
+
+    public void AcessarConta(int numeroConta)
+    {
+        string conta = numeroConta.ToString();
+
+        nav.NavigateTo("/painel/" + conta);
+    }
+
+}
+
+<style>
+    .container {
+        padding-top: 5rem!important;
+    }
+    .conta{
+        margin: 2rem 0;
+        border: solid 4px lightgray;
+        border-top: 0!important;
+        border-right: 0!important;
+        padding: 10px!important;
+        border-radius: 11px!important;
+    }
+</style>
+
+
+

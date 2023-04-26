@@ -1,5 +1,18 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.container {
+    padding-top: 5rem;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield; /* Firefox */
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

@@ -1,9 +1,5 @@
 ﻿using System;
 
-/// <summary>
-/// Summary description for Class1
-/// </summary>
-
 namespace carteiraDigital.Class
 {
 
@@ -32,17 +28,18 @@ namespace carteiraDigital.Class
 		public bool Sacar(double Valor)
 		{
 
-			if (Valor > this.Saldo)
-			{
-				return false;
+			double SaldoTransferivel = this.Saldo + this.Limite;
 
-			}
-			else
+			if(Valor <= SaldoTransferivel)
 			{
 
 				this.Saldo -= Valor;
 				return true;
 
+			} 
+			else
+			{
+				return false;
 			}
 
 		}
@@ -79,11 +76,27 @@ namespace carteiraDigital.Class
 		*/
 		public bool Transferir(Carteira Destino, double Valor)
 		{
-			// Verifica se há saldo para transferência
-			if (this.Saldo < Valor)
+            double SaldoTransferivel = this.Saldo + this.Limite;
+
+            // Verifica se há saldo para transferência
+            if (Valor <= SaldoTransferivel)
 			{
 
-				return false;
+                // Realiza o saque de uma conta e o deposito em outra
+                bool saque = this.Sacar(Valor);
+                bool transferencia = Destino.Depositar(Valor);
+
+                // Verifica se a transferência foi realizada
+                if (transferencia && saque)
+                {
+                    return true;
+                }
+                else
+                {
+                    // Deposita o valor da transferência caso haja falha
+                    this.Depositar(Valor);
+                    return false;
+                }
 
 			}
 			else

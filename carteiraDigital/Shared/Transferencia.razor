@@ -1,0 +1,62 @@
+﻿@inject DadosCarteira dados
+
+<div id="tabTransf">
+
+    <div class="form-cotrol">
+        <label>Num. da conta</label>
+        <input type="number" @bind=numeroConta>
+
+        <label>Valor</label>
+        <input type="number" @bind=valorTransferencia>
+    </div>
+
+    <button @onclick=Transferir>Transferir</button>
+
+    @if (transferencia == true)
+    {
+        <div>
+            <strong><p style="color: green">Transferência realizada com sucesso!</p></strong>
+            <strong><p>Número conta destino: @numeroConta</p></strong>
+            <p>Valor: @valorTransferencia.ToString("C")</p>
+            <p>Data: @dados.DataSistema.ToLongTimeString()</p>
+        </div>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public Carteira Conta { get; set; }
+    bool? transferencia = null;
+    int numeroConta;
+    double valorTransferencia;
+
+    public void Transferir()
+    {
+        Carteira Destino = dados.ListaDados.FirstOrDefault(c => c.Numero.ToString() == numeroConta.ToString());
+
+
+
+        if(Destino is not null)
+        {
+            Conta.Transferir(Destino, valorTransferencia);
+            transferencia = true;
+
+        } 
+        else
+        {
+            transferencia = false;
+        }
+
+    }
+}
+
+<style>
+    input, label {
+        display: block;
+        margin-top: 1rem;
+    }
+    button {
+        margin-top: 2rem;
+    }
+</style>
