@@ -5,16 +5,39 @@
 <TopBar titulo="Data e Hora"/>
 
 <div class="container">
+    <p>Hora do sistema: @dados.DataSistema </p>
 
+    <div>
+        <label>Data</label>
+        <input type="date" min="@minData" max="@maxData" @bind=inputData />
+    </div>
+
+    <div>
+        <label>Hora</label>
+        <input type="time" @bind=inputHora />
+    </div>
+
+    <input id="data-hora" type="datetime" hidden @bind=DataHora>
+
+    <button class="btn-primary" @onclick="AlteraDataHora">Alterar</button>
     
 </div>
 
 @code {
+    // Definindo data mínima e máxima
+    string minData = DateTime.Now.AddYears(-2).ToShortDateString();
+    string maxData = DateTime.Now.AddYears(+2).ToShortDateString();
+    
+    // Pegando valores dos inputs
+    DateTime inputData = DateTime.Now;
+    DateTime inputHora = DateTime.Now;
+    string DataHora = "";
 
-    /*
-     * DESENVOLVER PAG DE ALTERAÇÃO DE DATA DO SISTEMA
-     * 
-     * 
-     */
+    public void AlteraDataHora()
+    {
+        DataHora = inputData.ToShortDateString()+" "+inputHora.ToLongTimeString();
+
+        dados.DataSistema = DateTime.Parse(DataHora);
+
+    }
 }
-

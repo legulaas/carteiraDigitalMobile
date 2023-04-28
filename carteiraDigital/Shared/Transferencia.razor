@@ -20,6 +20,10 @@
             <p>Valor: @valorTransferencia.ToString("C")</p>
             <p>Data: @dados.DataSistema.ToLongTimeString()</p>
         </div>
+    } else if(transferencia == false){
+
+        <p class="msg-erro">@response</p>
+
     }
 
 </div>
@@ -27,9 +31,10 @@
 @code {
     [Parameter]
     public Carteira Conta { get; set; }
+    double valorTransferencia;
     bool? transferencia = null;
     int numeroConta;
-    double valorTransferencia;
+    string response = "";
 
     public void Transferir()
     {
@@ -43,6 +48,7 @@
         } 
         else
         {
+            response = "Erro ao realizar transferência.";
             transferencia = false;
         }
 

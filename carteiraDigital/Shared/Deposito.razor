@@ -32,17 +32,27 @@
     public void Depositar()
     {
 
-        if(valorDeposito > 0)
+        bool horario = dados.VerificaHorario();
+
+        if (horario)
         {
 
-            bool depositoCarteira = Conta.Depositar(valorDeposito);
-            deposito = true;
+            if(valorDeposito > 0)
+            {
 
-        }
+                bool depositoCarteira = Conta.Depositar(valorDeposito);
+                deposito = true;
+
+            }
+            else
+            {
+                response = "Valor do depósito deve ser maior do que R,00";
+                deposito = false;
+            }
+        } 
         else
         {
-            response = "Valor do depósito deve ser maior do que R$0,00";
-            deposito = false;
+            response = "Saque e depósito só são possíveis entre 08:00 e 18:00 horas.";
         }
 
     }

@@ -45,13 +45,13 @@
 
     public bool erro = false;
 
-    /*
+     /*
      *
      * Cria a conta da carteira digital. 
      * 
      * @return string response
      * 
-     */
+    */
     private void CriarConta()
     {
 
@@ -66,6 +66,7 @@
 
         if(depositoValor > 0 && novaConta.CPF.Length == 11)
         {
+
             bool depositoInicial = novaConta.Depositar(depositoValor); 
 
             if (depositoInicial)
