@@ -18,6 +18,8 @@ namespace carteiraDigital.Class
 
 		public double Tarifa { get; private set; } = 19.90;
 
+		public DateTime UltimaCobranca {get; set;}
+
 
 		/*
 		 * Realiza saque de um valor da carteira digital
@@ -28,20 +30,34 @@ namespace carteiraDigital.Class
 		public bool Sacar(double Valor)
 		{
 
-			double SaldoTransferivel = this.Saldo + this.Limite;
+			if(Valor > this.Saldo){
 
-			if(Valor <= SaldoTransferivel)
-			{
+				if(Valor > this.Saldo + this.Limite){
+
+					return false;
+
+				} else {
+
+					double restante = Valor - (this.Saldo+this.Limite);
+
+					if(restante < 0){
+
+						return false;
+
+					} else {
+						this.Saldo = this.Limite - restante;
+						this.Limite = restante;
+						return true;
+					}
+
+				}
+
+			} else {
 
 				this.Saldo -= Valor;
 				return true;
 
-			} 
-			else
-			{
-				return false;
 			}
-
 		}
 
 		/*
@@ -54,7 +70,7 @@ namespace carteiraDigital.Class
 		*/
 		public bool Depositar(double Valor)
 		{
-			if (Valor > 0)
+			if (Valor > 0)						//Verifica se o valor de depósito é maior que R$0,00
 			{
 				this.Saldo += Valor;
 				return true;
@@ -74,48 +90,19 @@ namespace carteiraDigital.Class
 		 * @param double Valor
 		 * @return boolean
 		*/
-		public bool Transferir(Carteira Destino, double Valor)
+		public bool Transferir(Carteira Destino, double Valor) // CORRIGIR ERRO DE LIMITE E TRANSFERENCIA
 		{
-            double SaldoTransferivel = this.Saldo + this.Limite;
+			bool saque = this.Sacar(Valor);						// Realiza o saque da conta de origem.
 
-            // Verifica se há saldo para transferência
-            if (Valor <= SaldoTransferivel)
+			if (saque)											// Verifica se o saque foi realizado.
 			{
-
-                // Realiza o saque de uma conta e o deposito em outra
-                bool saque = this.Sacar(Valor);
-                bool transferencia = Destino.Depositar(Valor);
-
-                // Verifica se a transferência foi realizada
-                if (transferencia && saque)
-                {
-                    return true;
-                }
-                else
-                {
-                    // Deposita o valor da transferência caso haja falha
-                    this.Depositar(Valor);
-                    return false;
-                }
-
+				bool transferencia = Destino.Depositar(Valor);	// Realiza o deposito do valor da transferência para a conta destino.
+				return true;
 			}
 			else
 			{
-				// Realiza o saque de uma conta e o deposito em outra
-				bool saque = this.Sacar(Valor);
-				bool transferencia = Destino.Depositar(Valor);
-
-				// Verifica se a transferência foi realizada
-				if (transferencia)
-				{
-					return true;
-				}
-				else
-				{
-					// Deposita o valor da transferência caso haja falha
-					this.Depositar(Valor);
-					return false;
-				}
+				this.Depositar(Valor);							// Deposita o valor da transferência para conta origem caso haja falha.
+				return false;
 			}
 		}
 
@@ -123,15 +110,27 @@ namespace carteiraDigital.Class
 		 * 
 		 * Realiza a cobrança de tarifa mensalmente
 		 * 
-		 * @param int Dia
+		 * @param DateTime dataSistema
 		 * @return boolean
 		 * 
-		
-		public bool CobrarTarifa(int Dia)
+		*/
+		public bool CobrarTarifa(DateTime dataSistema)
 		{
+			DateTime periodoMes = this.UltimaCobranca.AddMonths(1);
+			int validaPeriodo = DateTime.Compare(dataSistema, periodoMes);
 
+			Console.WriteLine(validaPeriodo);
 
+			if(validaPeriodo >= 0){
 
-		}*/
+				this.Saldo -= this.Tarifa;
+				return true;
+
+			} else {
+
+				return false;
+
+			}
+		}
 	}
 }

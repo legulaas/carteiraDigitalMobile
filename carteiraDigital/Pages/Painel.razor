@@ -10,28 +10,36 @@
 {
     
         <h1>Bem vindo, @carteira.Dono !</h1>
+        <div class="div-saldo">
+            <p><strong>Saldo: </strong>@carteira.Saldo.ToString("C")</p>
+        </div>
+
         <div class="painel">
+
             <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                     <a @onclick="() => escolhaOperacao(1)"><img class="icon" src="img/transaction.png" data-bs-toggle="modal" data-bs-target="#modalTransf"/></a>
                     <p>Transferir</p>
                 </div>
-                <div class="col-6">
+
+                <div class="col-4">
                     <a @onclick="() => escolhaOperacao(2)"><img class="icon" src="img/deposit.png" /></a>
                     <p>Depositar</p>
+                </div>
+
+                <div class="col-4">
+                    <a @onclick="() => escolhaOperacao(3)"><img class="icon" src="img/withdraw.png" /></a>
+                    <p>Sacar</p>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-6">
-                    <a href="/saldo"><img class="icon" src="img/wallet.png" /></a>
-                    <p>Saldo</p>
-                </div>
-                <div class="col-6">
-                    <a href="/dados"><img class="icon" src="img/user.png" /></a>
+                <div class="col-4">
+                    <a @onclick='() => nav.NavigateTo("/dados/"+carteira.Numero)'><img class="icon" src="img/user.png" /></a>
                     <p>Dados</p>
                 </div>
             </div>
+            
         </div>
 
         switch (@operacao)
@@ -43,6 +51,11 @@
             case 2:
                 <Deposito Conta="@carteira"/>
                 break;
+            
+            case 3:
+                <Saque Conta="@carteira"/>
+                break;
+
         }
 
 
@@ -78,6 +91,7 @@ else
     .container{
         padding-top: 5rem!important;
     }
+
     .icon {
         width: 100%;
         background: #f1f1f1;
@@ -110,7 +124,20 @@ else
         transition: 0s
     }
 
-    p {
+    .painel > p {
         text-align: center;
+    }
+
+    .container .row > div {
+        text-align: center;
+    }
+
+    h1, .div-saldo {
+        margin-top: 1rem;
+    }
+
+    .response-success > p{
+        text-align: center;
+        margin-bottom: 0;
     }
 </style>

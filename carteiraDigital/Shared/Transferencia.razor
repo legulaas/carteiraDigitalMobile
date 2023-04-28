@@ -42,8 +42,7 @@
 
         if(Destino is not null)
         {
-            Conta.Transferir(Destino, valorTransferencia);
-            transferencia = true;
+            transferencia = Conta.Transferir(Destino, valorTransferencia);
 
         } 
         else

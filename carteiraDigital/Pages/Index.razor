@@ -5,33 +5,42 @@
 <PageTitle>Carteira</PageTitle>
 <TopBar titulo="Cadastre sua conta"/>
 
-<div class="container mx-auto">
-    <div class="form">
+<div class="container">
 
-        <div class="nome">
-            <label>Nome do proprietário</label>
+    <div class="criar-conta mx-auto">
+
+        <div class="col-12">
+            <label>Nome</label>
             <input type="text" @bind=nomeDono>
         </div>
 
-        <div class="cpf">
-            <label>CPF do proprietário</label>
+        <div class="col-12">
+            <label>CPF</label>
             <input type="text" @bind=cpfDono>
         </div>
 
-        <div class="deposito-inicial">
-            <label>Depósito inicial</label>
-            <input type="number" @bind=depositoValor>
+        <div class="col-12">
+            <label>Depósito</label>
+            <input type="number" min="0" @bind=depositoValor>
         </div>
-    
+
         <button id="btn-cadastro" class="btn btn-primary" @onclick="CriarConta">Cadastrar</button>
-        <button id="btn-contas" class="btn btn-primary" @onclick='() => nav.NavigateTo("/contas")'>Contas</button>
+        <br>
 
         @if(erro != true) {
-            <p style="color: black">@response</p>
+            <p style="color: green">@response</p>
         } else {
             <p style="color: red">@response</p>
         }
         
+    </div>
+
+    <div class="acessar-contas">
+        <button id="btn-contas" class="btn btn-primary" @onclick='() => nav.NavigateTo("/contas")'>Acessar Contas</button>
+    </div>
+
+    <div class="data-hora">
+        <button id="btn-datahora" class="btn btn-primary" @onclick='() => nav.NavigateTo("/data-sistema")'>Alterar Data</button>
     </div>
 
 </div>
@@ -42,7 +51,6 @@
     private double depositoValor;
     private int numeroConta;
     private string response = "";
-
     public bool erro = false;
 
      /*
@@ -71,6 +79,7 @@
 
             if (depositoInicial)
             {
+                novaConta.CobrarTarifa(dados.DataSistema);
                 dados.ListaDados.Add(novaConta);
                 
                 Console.WriteLine($"Nome: " + dados.ListaDados[numeroConta - 1].Dono);
@@ -95,16 +104,17 @@
 }
 
 <style>
-    .form{
-        margin-top:5rem;
-    }
-    #btn-cadastro, #btn-contas {
-        margin: 2rem 0;
+    button {
+        margin-top: 1.5rem;
         border-top: 0;
         border-right: 0;
         border-radius: 6px;
+        width: 75%;
     }
     input, label{
         display: block;
+    }
+    .criar-conta, .acessar-contas, .data-hora {
+        margin-bottom: 2rem;
     }
 </style>

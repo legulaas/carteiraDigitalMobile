@@ -10,7 +10,7 @@
         foreach(var conta in dadosCarteira.ListaDados)
         {
             <div class="conta">
-                <h4><strong>Nº Conta:</strong> @conta.Numero | <strong>Nome:</strong> @conta.Dono | <strong>Saldo:</strong> @conta.Saldo.ToString("C")</h4>
+                <h4><strong>Nº Conta:</strong> @conta.Numero <br><strong>Nome:</strong> @conta.Dono <br><strong>Saldo:</strong> @conta.Saldo.ToString("C")</h4>
                 <button class="btn-primary" @onclick="() => AcessarConta(conta.Numero)">Acessar conta</button>
             </div>
         }

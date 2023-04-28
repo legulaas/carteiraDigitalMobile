@@ -1,19 +1,19 @@
-﻿@inject DadosCarteira dados
+@inject DadosCarteira dados
 
-<div id="tabDeposit">
+<div id="tabSaque">
 
     <div class="form-cotrol">
         <label>Valor</label>
-        <input type="number" @bind=valorDeposito>
+        <input type="number" @bind=valorSaque>
     </div>
 
-    <button @onclick=Depositar>Depositar</button>
+    <button @onclick=Sacar>Sacar</button>
 
-    @if (deposito == true)
+    @if (saque == true)
     {
-        <div>
-            <strong><p style="color: green">Deposito realizado com sucesso!</p></strong>
-            <p>Valor: @valorDeposito.ToString("C")</p>
+        <div class="response-success">
+            <strong><p style="color: green">Saque realizado com sucesso!</p></strong>
+            <p>Valor: @valorSaque.ToString("C")</p>
             <p>Data: @dados.DataSistema.ToLongTimeString()</p>
         </div>
     } else
@@ -25,11 +25,11 @@
 @code {
     [Parameter]
     public Carteira Conta { get; set; }
-    bool? deposito = null;
-    double valorDeposito;
+    bool? saque = null;
+    double valorSaque;
     string response = "";
 
-    public void Depositar()
+    public void Sacar()
     {
 
         bool horario = dados.VerificaHorario();
@@ -37,17 +37,17 @@
         if (horario)
         {
 
-            if(valorDeposito > 0)
+            if(valorSaque > 0)
             {
 
-                bool depositoCarteira = Conta.Depositar(valorDeposito);
-                deposito = true;
+                bool saqueCarteira = Conta.Sacar(valorSaque);
+                saque = true;
 
             }
             else
             {
                 response = "Valor do saque deve ser maior do que R$0,00";
-                deposito = false;
+                saque = false;
             }
         } 
         else
@@ -59,6 +59,7 @@
 }
 
 <style>
+
     input, label {
         display: block;
         margin-top: 1rem;

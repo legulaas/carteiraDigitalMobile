@@ -1,5 +1,11 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.botoes > button {
+    border-top: 0;
+    border-right: 0;
+    border-radius: 6px;
+}
+
 .msg-erro{
     color: red;
     font-weight: 600;
