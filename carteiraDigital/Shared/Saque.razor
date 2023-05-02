@@ -41,7 +41,17 @@
             {
 
                 bool saqueCarteira = Conta.Sacar(valorSaque);
-                saque = true;
+
+                if (saqueCarteira)
+                {
+                    saque = true;
+                } 
+                else
+                {
+                    response = "Erro ao realizar saque.";
+                    saque = false;
+                } 
+                
 
             }
             else

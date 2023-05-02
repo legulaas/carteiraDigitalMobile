@@ -18,7 +18,7 @@ namespace carteiraDigital.Class
 
 		public double Tarifa { get; private set; } = 19.90;
 
-		public DateTime UltimaCobranca {get; set;}
+		public DateTime UltimaCobranca { get; set; }
 
 
 		/*
@@ -30,33 +30,69 @@ namespace carteiraDigital.Class
 		public bool Sacar(double Valor)
 		{
 
-			if(Valor > this.Saldo){
+			double restante;
+
+			if(Valor > this.Saldo)
+			{
 
 				if(Valor > this.Saldo + this.Limite){
 
-					return false;
 
-				} else {
+                    Console.WriteLine(this.Saldo);
+                    Console.WriteLine(this.Limite);
+                    return false;
 
-					double restante = Valor - (this.Saldo+this.Limite);
+				} 
+				else if(Valor < (this.Saldo + this.Limite))
+				{
 
-					if(restante < 0){
+					restante = (this.Saldo+this.Limite) - Valor;
 
-						return false;
+					if(restante < 0)
+					{
 
-					} else {
-						this.Saldo = this.Limite - restante;
+                        return false;
+
+					} 
+					else
+					{
+						this.Saldo = restante - this.Limite;
 						this.Limite = restante;
-						return true;
+
+                        return true;
 					}
 
+                } 
+				else
+				{
+
+                    Console.WriteLine(this.Saldo);
+                    Console.WriteLine(this.Limite);
+
+                    this.Saldo = 0 - this.Limite;
+					this.Limite = 0;
+					return true;
 				}
 
-			} else {
+			} 
+			else if(Valor < this.Saldo)
+			{
 
-				this.Saldo -= Valor;
+                Console.WriteLine(this.Saldo);
+                Console.WriteLine(this.Limite);
+
+                this.Saldo -= Valor;
 				return true;
 
+			} 
+			else
+			{
+
+                Console.WriteLine(this.Saldo);
+                Console.WriteLine(this.Limite);
+
+                this.Saldo = 0;
+				return true;
 			}
 		}
 
@@ -90,20 +126,38 @@ namespace carteiraDigital.Class
 		 * @param double Valor
 		 * @return boolean
 		*/
-		public bool Transferir(Carteira Destino, double Valor) // CORRIGIR ERRO DE LIMITE E TRANSFERENCIA
+		public bool Transferir(Carteira Destino, double Valor)
 		{
-			bool saque = this.Sacar(Valor);						// Realiza o saque da conta de origem.
 
-			if (saque)											// Verifica se o saque foi realizado.
+			double valorTransferivel = this.Saldo + this.Limite;
+			bool transferencia;
+
+			if(valorTransferivel >= Valor) 
 			{
-				bool transferencia = Destino.Depositar(Valor);	// Realiza o deposito do valor da transferência para a conta destino.
-				return true;
-			}
+
+				bool saque = this.Sacar(Valor);
+
+				Console.WriteLine(saque);
+
+				transferencia = Destino.Depositar(Valor);
+
+				if(transferencia) 
+				{
+					return true;
+				} 
+				else
+				{
+					this.Depositar(Valor);
+					return false;
+				}
+				
+			} 
 			else
 			{
-				this.Depositar(Valor);							// Deposita o valor da transferência para conta origem caso haja falha.
 				return false;
 			}
+
+
 		}
 
 		/*
@@ -116,15 +170,15 @@ namespace carteiraDigital.Class
 		*/
 		public bool CobrarTarifa(DateTime dataSistema)
 		{
-			DateTime periodoMes = this.UltimaCobranca.AddMonths(1);
-			int validaPeriodo = DateTime.Compare(dataSistema, periodoMes);
+			DateTime periodoMes = this.UltimaCobranca.AddMonths(1);							//	Acrescenta 1 mês na data da ultima cobrança para verificação.
+			int validaPeriodo = DateTime.Compare(dataSistema, periodoMes);                  //	Verifica se a data está válida para realizar a cobrança
 
-			Console.WriteLine(validaPeriodo);
+			if(validaPeriodo >= 0){															// Verifica se a última cobrança foi realizada há 1 mês ou mais.
 
-			if(validaPeriodo >= 0){
+				this.Saldo -= this.Tarifa;													
+				this.UltimaCobranca = dataSistema;
 
-				this.Saldo -= this.Tarifa;
-				return true;
+                return true;
 
 			} else {
 

@@ -8,6 +8,13 @@
 
         <label>Valor</label>
         <input type="number" @bind=valorTransferencia>
+
+        @if(confirmaCPF == true)
+        {
+            <label>3 primeiro dígitos CPF</label>
+            <input type="text" @bind=digitosCPF>
+        }
+
     </div>
 
     <button @onclick=Transferir>Transferir</button>
@@ -32,17 +39,44 @@
     [Parameter]
     public Carteira Conta { get; set; }
     double valorTransferencia;
+    double valorTransferivel;
     bool? transferencia = null;
+    bool? confirmaCPF = null;
+    string digitosCPF;
     int numeroConta;
     string response = "";
 
+    /*
+    * 
+    * Realiza a chamada da função de transferência para a conta acessada.
+    * 
+    */
     public void Transferir()
     {
+        valorTransferivel = Conta.Saldo + Conta.Limite;
         Carteira Destino = dados.ListaDados.FirstOrDefault(c => c.Numero.ToString() == numeroConta.ToString());
 
-        if(Destino is not null)
+        if(Destino is not null && valorTransferencia <= valorTransferivel)
         {
-            transferencia = Conta.Transferir(Destino, valorTransferencia);
+            if(valorTransferencia > 1000)
+            {
+                confirmaCPF = true;
+
+                if (digitosCPF == Conta.CPF.Substring(0, 3))
+                {
+                    transferencia = Conta.Transferir(Destino, valorTransferencia);
+
+                } else
+                {
+                    response = "Confirme os 3 primeiros dígitos do seu CPF para continuar com a transação.";
+                    transferencia = false;
+                }
+            } 
+            else
+            {
+                confirmaCPF = false;
+                transferencia = Conta.Transferir(Destino, valorTransferencia); 
+            }
 
         } 
         else

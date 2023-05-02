@@ -43,6 +43,10 @@
         <button id="btn-datahora" class="btn btn-primary" @onclick='() => nav.NavigateTo("/data-sistema")'>Alterar Data</button>
     </div>
 
+    <div class="cobrar-tarifa">
+        <button id="btn-tarifa" class="btn btn-primary" @onclick=CobrarTodasTarifas >Cobrar tarifas</button>
+    </div>
+
 </div>
 
 @code {
@@ -53,53 +57,61 @@
     private string response = "";
     public bool erro = false;
 
-     /*
-     *
-     * Cria a conta da carteira digital. 
-     * 
-     * @return string response
-     * 
+    /*
+    *
+    * Cria a conta da carteira digital. 
+    * 
+    * @return string response
+    * 
     */
     private void CriarConta()
     {
 
         Carteira novaConta = new Carteira();
 
-        numeroConta = dados.ListaDados.Count+1;
+        numeroConta = dados.ListaDados.Count + 1;
 
         novaConta.Dono = nomeDono;
         novaConta.CPF = cpfDono;
         novaConta.Numero = numeroConta;
         novaConta.Limite = depositoValor * 0.1;
 
-        if(depositoValor > 0 && novaConta.CPF.Length == 11)
+        if (depositoValor > 0 && novaConta.CPF.Length == 11)
         {
 
-            bool depositoInicial = novaConta.Depositar(depositoValor); 
+            bool depositoInicial = novaConta.Depositar(depositoValor);
 
             if (depositoInicial)
             {
                 novaConta.CobrarTarifa(dados.DataSistema);
                 dados.ListaDados.Add(novaConta);
-                
-                Console.WriteLine($"Nome: " + dados.ListaDados[numeroConta - 1].Dono);
-                Console.WriteLine($"Numero: " + dados.ListaDados[numeroConta - 1].Numero);
-                Console.WriteLine($"Saldo: " + dados.ListaDados[numeroConta - 1].Saldo);
-                Console.WriteLine($"Limite: "+dados.ListaDados[numeroConta - 1].Limite);
-                Console.WriteLine($"CPF: " + dados.ListaDados[numeroConta - 1].CPF);
 
                 response = $"Conta criada com sucesso (Numero: {numeroConta}; Nome: {nomeDono}; Saldo: {depositoValor})";
 
                 nomeDono = "";
                 depositoValor = 0;
             }
-        } 
+        }
         else
         {
             erro = true;
-            response = $"Falha ao criar conta digital. Verifique as informações novamente.";    
+            response = $"Falha ao criar conta digital. Verifique as informações novamente.";
         }
 
+    }
+
+
+    /*
+     * 
+     * Realiza a cobrança da tarifa mensal para cada conta cadastrada.
+     * 
+     */
+    private void CobrarTodasTarifas()
+    {
+        foreach (var conta in dados.ListaDados)
+        {
+            conta.CobrarTarifa(dados.DataSistema);
+        }
     }
 }
 

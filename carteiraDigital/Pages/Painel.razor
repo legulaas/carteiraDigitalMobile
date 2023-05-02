@@ -10,8 +10,18 @@
 {
     
         <h1>Bem vindo, @carteira.Dono !</h1>
-        <div class="div-saldo">
-            <p><strong>Saldo: </strong>@carteira.Saldo.ToString("C")</p>
+        <div class="div-dados">
+            @if(carteira.Saldo >= 0)
+            {
+                <p><strong>Saldo: </strong>@carteira.Saldo.ToString("C")</p>
+            } 
+            else
+            {
+                <p><strong>Saldo: </strong><span style="color: red;">@carteira.Saldo.ToString("C")</span></p>
+            }
+
+            <p><strong>Limite disponível: </strong>@carteira.Limite.ToString("C")</p>
+            <p><strong>Última cobrança tarifa: </strong>@carteira.UltimaCobranca.ToShortDateString()</p>
         </div>
 
         <div class="painel">
@@ -132,7 +142,7 @@ else
         text-align: center;
     }
 
-    h1, .div-saldo {
+    h1, .div-dados {
         margin-top: 1rem;
     }
 
