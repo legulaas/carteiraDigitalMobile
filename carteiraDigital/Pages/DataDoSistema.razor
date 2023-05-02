@@ -27,7 +27,7 @@
     // Definindo data mínima e máxima
     string minData = DateTime.Now.AddYears(-2).ToShortDateString();
     string maxData = DateTime.Now.AddYears(+2).ToShortDateString();
-    
+
     // Pegando valores dos inputs
     DateTime inputData = DateTime.Now;
     DateTime inputHora = DateTime.Now;
@@ -38,6 +38,8 @@
         DataHora = inputData.ToShortDateString()+" "+inputHora.ToLongTimeString();
 
         dados.DataSistema = DateTime.Parse(DataHora);
+        dados.HorarioInicial = DateTime.Parse(inputData.ToShortDateString() + "  08:00:00");
+        dados.HorarioFinal = DateTime.Parse(inputData.ToShortDateString() + "  18:00:00");
 
     }
 }

@@ -30,13 +30,13 @@ namespace carteiraDigital.Class
 		public bool Sacar(double Valor)
 		{
 
-			if(Valor > this.Saldo){
+			if(Valor > this.Saldo){															//	Verifica necessidade de utilizar limite para o saque
 
-				if(Valor > (this.Saldo + this.Limite) && Valor > this.Limite)
+				if(Valor > (this.Saldo + this.Limite) && Valor > this.Limite)				// Se o valor for maior que o saldo e o limite juntos
 				{
 					return false;
 				} 
-				else if (Valor <= this.Limite)
+				else if (Valor <= this.Limite)												// Verifica necessidade de utilizar o limite (em caso de saldo <= 0)
 				{	
 					this.Limite -= Math.Round(Valor,2);
 					this.Saldo -= Math.Round(Valor,2);
@@ -44,10 +44,10 @@ namespace carteiraDigital.Class
 
 					return true;
 				}
-				else 
+				else																		// Utilizando o saldo e o limite para o saque
 				{
 
-					double restante = Math.Round(((this.Saldo + this.Limite) - Valor), 2);
+					double restante = Math.Round(((this.Saldo + this.Limite) - Valor), 2);	
 					
 					if(restante < 0){
 
@@ -55,8 +55,8 @@ namespace carteiraDigital.Class
 
 					} else {
 						
-						this.Saldo = Math.Round((restante - this.Limite), 2);
-						this.Limite = Math.Round(restante, 2);
+						this.Saldo = Math.Round((restante - this.Limite), 2);				// Saldo negativo devido ao uso do limite
+						this.Limite = Math.Round(restante, 2);								// Limite diminui após o uso dele
 
 						Console.WriteLine("Saque realizado: " + Valor.ToString("C"));
 
@@ -65,7 +65,9 @@ namespace carteiraDigital.Class
 
 				}
 
-			} else {
+			} 
+			else 
+			{
 
 				this.Saldo -= Math.Round(Valor, 2);
 				Console.WriteLine("Saque realizado: " + Valor.ToString("C"));
