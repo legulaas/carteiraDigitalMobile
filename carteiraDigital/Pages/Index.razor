@@ -74,12 +74,12 @@
         novaConta.Dono = nomeDono;
         novaConta.CPF = cpfDono;
         novaConta.Numero = numeroConta;
-        novaConta.Limite = depositoValor * 0.1;
+        novaConta.Limite = Math.Round(depositoValor * 0.1, 2);
 
         if (depositoValor > 0 && novaConta.CPF.Length == 11)
         {
 
-            bool depositoInicial = novaConta.Depositar(depositoValor);
+            bool depositoInicial = novaConta.Depositar(Math.Round(depositoValor, 2));
 
             if (depositoInicial)
             {

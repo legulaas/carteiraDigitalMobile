@@ -30,69 +30,47 @@ namespace carteiraDigital.Class
 		public bool Sacar(double Valor)
 		{
 
-			double restante;
+			if(Valor > this.Saldo){
 
-			if(Valor > this.Saldo)
-			{
-
-				if(Valor > this.Saldo + this.Limite){
-
-
-                    Console.WriteLine(this.Saldo);
-                    Console.WriteLine(this.Limite);
-                    return false;
-
+				if(Valor > (this.Saldo + this.Limite) && Valor > this.Limite)
+				{
+					return false;
 				} 
-				else if(Valor < (this.Saldo + this.Limite))
-				{
+				else if (Valor <= this.Limite)
+				{	
+					this.Limite -= Math.Round(Valor,2);
+					this.Saldo -= Math.Round(Valor,2);
+					Console.WriteLine("Saque realizado: " + Valor.ToString("C"));
 
-					restante = (this.Saldo+this.Limite) - Valor;
-
-					if(restante < 0)
-					{
-
-                        return false;
-
-					} 
-					else
-					{
-						this.Saldo = restante - this.Limite;
-						this.Limite = restante;
-
-                        return true;
-					}
-
-                } 
-				else
-				{
-
-                    Console.WriteLine(this.Saldo);
-                    Console.WriteLine(this.Limite);
-
-                    this.Saldo = 0 - this.Limite;
-					this.Limite = 0;
 					return true;
 				}
+				else 
+				{
 
-			} 
-			else if(Valor < this.Saldo)
-			{
+					double restante = Math.Round(((this.Saldo + this.Limite) - Valor), 2);
+					
+					if(restante < 0){
 
-                Console.WriteLine(this.Saldo);
-                Console.WriteLine(this.Limite);
+						return false;
 
-                this.Saldo -= Valor;
+					} else {
+						
+						this.Saldo = Math.Round((restante - this.Limite), 2);
+						this.Limite = Math.Round(restante, 2);
+
+						Console.WriteLine("Saque realizado: " + Valor.ToString("C"));
+
+						return true;
+					}
+
+				}
+
+			} else {
+
+				this.Saldo -= Math.Round(Valor, 2);
+				Console.WriteLine("Saque realizado: " + Valor.ToString("C"));
 				return true;
 
-			} 
-			else
-			{
-
-                Console.WriteLine(this.Saldo);
-                Console.WriteLine(this.Limite);
-
-                this.Saldo = 0;
-				return true;
 			}
 		}
 
@@ -108,7 +86,11 @@ namespace carteiraDigital.Class
 		{
 			if (Valor > 0)						//Verifica se o valor de depósito é maior que R$0,00
 			{
-				this.Saldo += Valor;
+
+				this.Saldo += Math.Round(Valor, 2);
+
+				Console.WriteLine("Depósito realizado: " + Valor.ToString("C"));
+
 				return true;
 			}
 			else
@@ -129,35 +111,30 @@ namespace carteiraDigital.Class
 		public bool Transferir(Carteira Destino, double Valor)
 		{
 
-			double valorTransferivel = this.Saldo + this.Limite;
 			bool transferencia;
 
-			if(valorTransferivel >= Valor) 
-			{
+			bool saque = this.Sacar(Math.Round(Valor, 2));
 
-				bool saque = this.Sacar(Valor);
+			if(saque){
 
-				Console.WriteLine(saque);
-
-				transferencia = Destino.Depositar(Valor);
+				transferencia = Destino.Depositar(Math.Round(Valor,2));
 
 				if(transferencia) 
-				{
+				{	
+					Console.WriteLine($"Transferência realizada.\r\n Origem: {this.Numero}\r\n Destino: {Destino.Numero}\r\n Valor: {Valor.ToString("C")}");
 					return true;
 				} 
 				else
-				{
-					this.Depositar(Valor);
+				{	
+					Console.WriteLine("Falha na transferência, valor retornado para conta de origem.");
+					this.Depositar(Math.Round(Valor, 2));
 					return false;
 				}
-				
-			} 
-			else
-			{
+			
+			} else {
 				return false;
 			}
-
-
+				
 		}
 
 		/*
@@ -175,8 +152,10 @@ namespace carteiraDigital.Class
 
 			if(validaPeriodo >= 0){															// Verifica se a última cobrança foi realizada há 1 mês ou mais.
 
-				this.Saldo -= this.Tarifa;													
+				this.Saldo -= Math.Round(this.Tarifa, 2);													
 				this.UltimaCobranca = dataSistema;
+
+				Console.WriteLine("Tarifa cobrada para conta "+this.Numero);
 
                 return true;
 

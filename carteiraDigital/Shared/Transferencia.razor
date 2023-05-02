@@ -53,10 +53,9 @@
     */
     public void Transferir()
     {
-        valorTransferivel = Conta.Saldo + Conta.Limite;
         Carteira Destino = dados.ListaDados.FirstOrDefault(c => c.Numero.ToString() == numeroConta.ToString());
 
-        if(Destino is not null && valorTransferencia <= valorTransferivel)
+        if(Destino is not null)
         {
             if(valorTransferencia > 1000)
             {
@@ -64,7 +63,12 @@
 
                 if (digitosCPF == Conta.CPF.Substring(0, 3))
                 {
-                    transferencia = Conta.Transferir(Destino, valorTransferencia);
+                    transferencia = Conta.Transferir(Destino, Math.Round(valorTransferencia, 2));
+                    
+                    if(transferencia == false)
+                    {
+                        response = "Saldo insuficiente.";
+                    }
 
                 } else
                 {
@@ -75,7 +79,13 @@
             else
             {
                 confirmaCPF = false;
-                transferencia = Conta.Transferir(Destino, valorTransferencia); 
+                transferencia = Conta.Transferir(Destino, Math.Round(valorTransferencia, 2)); 
+
+                if(transferencia == false)
+                {
+                    response = "Saldo insuficiente.";
+                }
+
             }
 
         } 
